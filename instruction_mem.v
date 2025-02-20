@@ -40,46 +40,6 @@ reg [WIDTH-1:0] inst_rom [0:NUM_INST-1];
         inst_rom[14] = 32'h00000000; // NO-OP
     end
 
-    always@(posedge iClk)begin
-        if(!iRstN) begin
-            addr <= 32'b0;
-            pc   <= 32'b0;
-        end
 
-        else begin
-            if(pc < NUM_INST) begin
-                addr <= inst_rom[pc];
-                pc   <= pc + 1;
-            end
-        end
-    end
-
-    // Extract machine code to run proper FW assembly
-    always@(posedge iClk)begin 
-        if(!iRstN) begin
-            rd <= 5'b0;
-            rs2 <= 5'b0;
-            rs1 <= 5'b0;
-            funct7 <= 7'b0;
-            funct3 <= 3'b0;
-            Opcode <= 7'b0;
-        end
-            
-        else begin
-                Opcode <= {addr[6:0]};
-                rd     <= {addr[11:7]};
-                funct3 <= {addr[14:12]};
-                rs1    <= {addr[19:15]};
-                rs2    <= {addr[24:20]};
-                funct7 <= {addr[31:25]};
-        end
-    end
-    
-    assign RD = rd;
-    assign RS1 = rs1;
-    assign RS2 = rs2;
-    assign Funct3 = funct3;
-    assign Funct7 = funct7;
-    assign opcode = Opcode;
     
 endmodule
